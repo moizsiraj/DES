@@ -46,7 +46,7 @@ public class DES {
     static int[] left_shift = {1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1};
 
     static String[][] auxKeys = new String[17][2];
-    static String[] keys = new String[16];
+    static String[] keys = new String[17];
 
     static String[][] auxMessage = new String[17][2];
 
@@ -108,15 +108,14 @@ public class DES {
     }
 
     static void getKey() {
-
-        for (int i = 1; i < auxKeys.length; i++) {
+        for (int i = 0; i < auxKeys.length; i++) {
             String auxKey = auxKeys[i][0] + auxKeys[i][1];
             StringBuilder key = new StringBuilder();
             for (int j = 0; j < pc_2.length; j++) {
                 key.append(auxKey.charAt(pc_2[j] - 1));
             }
-            keys[i - 1] = key.toString();
-            System.out.println(keys[i - 1]);
+            keys[i] = key.toString();
+            System.out.println(i + ":" + keys[i]);
         }
     }
 
@@ -172,23 +171,24 @@ public class DES {
         int Ln_1 = Integer.parseInt(auxMessage[index - 1][0], 2);
 
 
-        auxMessage[index][1] =;
+//        auxMessage[index][1] =;
     }
 
     static void func(int index) {
         StringBuilder e_Rn_1 = new StringBuilder();
         for (int i = 0; i < selection.length; i++) {
-            e_Rn_1.append(auxMessage[index-1][1].charAt(selection[i] - 1));
+            e_Rn_1.append(auxMessage[index - 1][1].charAt(selection[i] - 1));
         }
         int dec_e_Rn_1 = Integer.parseInt(e_Rn_1.toString(), 2);
-        int dec_key = Integer.parseInt(keys[index])
+//        int dec_key = Integer.parseInt(keys[index])
 
 
     }
 
 
     public static void main(String[] args) {
-
+        getAuxKeys("11110000110011001010101011110101010101100110011110001111");
+        getKey();
     }
 
 }
