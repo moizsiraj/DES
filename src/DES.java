@@ -32,10 +32,23 @@ public class DES {
             63, 55, 47, 39, 31, 23, 15, 7
     };
 
+    private static int[] selection = new int[]{
+            32, 1, 2, 3, 4, 5,
+            4, 5, 6, 7, 8, 9,
+            8, 9, 10, 11, 12, 13,
+            12, 13, 14, 15, 16, 17,
+            16, 17, 18, 19, 20, 21,
+            20, 21, 22, 23, 24, 25,
+            24, 25, 26, 27, 28, 29,
+            28, 29, 30, 31, 32, 1
+    };
+
     static int[] left_shift = {1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1};
 
     static String[][] auxKeys = new String[17][2];
     static String[] keys = new String[16];
+
+    static String[][] auxMessage = new String[17][2];
 
 
     //input 16 character hex key
@@ -107,10 +120,75 @@ public class DES {
         }
     }
 
+    static String stringToHex(String message) {
+        StringBuilder hexString = new StringBuilder();
+        char[] charArray = message.toCharArray();
+        for (int i = 0; i < charArray.length; i++) {
+            String hexOut = Integer.toHexString(charArray[i]);
+            hexString.append(hexOut);
+        }
+        return hexString.toString();
+    }
+
+    static String initialPermute(String message) {
+        String hexMessage = stringToHex(message);
+//        String binary = hexToBinary(hexMessage);
+        String binary = "0000000100100011010001010110011110001001101010111100110111101111";
+//        if (binary.length() < 64){
+//            int padding = 63 - binary.length();
+//            StringBuilder binMessage = new StringBuilder();
+//            for (int i = 0; i < padding; i++) {
+//                binMessage.append("0");
+//            }
+//            binMessage.append(binary);
+//            return binMessage.toString();
+//        }else{
+//            return binary.substring(0, 64);
+//        }
+        StringBuilder intialMessage = new StringBuilder();
+        for (int i = 0; i < ip.length; i++) {
+            intialMessage.append(binary.charAt(ip[i] - 1));
+        }
+        return intialMessage.toString();
+    }
+
+    static String[] splitMessage(String message) {
+        String C = message.substring(0, 32);
+        String D = message.substring(32, 64);
+        return new String[]{C, D};
+    }
+
+    static void getAuxMessages(String message) {
+        String[] messageSplit = splitMessage(message);
+        auxMessage[0][0] = messageSplit[0];
+        auxMessage[0][1] = messageSplit[1];
+        for (int i = 1; i <= 16; i++) {
+            auxMessage[i][0] = auxMessage[i - 1][1];
+            getRight(i);
+        }
+    }
+
+    static void getRight(int index) {
+        int Ln_1 = Integer.parseInt(auxMessage[index - 1][0], 2);
+
+
+        auxMessage[index][1] =;
+    }
+
+    static void func(int index) {
+        StringBuilder e_Rn_1 = new StringBuilder();
+        for (int i = 0; i < selection.length; i++) {
+            e_Rn_1.append(auxMessage[index-1][1].charAt(selection[i] - 1));
+        }
+        int dec_e_Rn_1 = Integer.parseInt(e_Rn_1.toString(), 2);
+        int dec_key = Integer.parseInt(keys[index])
+
+
+    }
+
+
     public static void main(String[] args) {
-        String per_key = permuteKey("133457799BBCDFF1");
-        getAuxKeys(per_key);
-        getKey();
+
     }
 
 }
