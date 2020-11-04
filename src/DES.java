@@ -1,4 +1,6 @@
 import java.math.BigInteger;
+import java.sql.Array;
+import java.util.Arrays;
 
 public class DES {
     public static String runDES(String message, String key) {
@@ -212,21 +214,22 @@ public class DES {
     }
 
     static String initialPermute(String message) {
+        String permutedMessage;
         String binary = hexToBinary(message);
-//        if (binary.length() < 64){
-//            int padding = 63 - binary.length();
-//            StringBuilder binMessage = new StringBuilder();
-//            for (int i = 0; i < padding; i++) {
-//                binMessage.append("0");
-//            }
-//            binMessage.append(binary);
-//            permutedMessage = binMessage.toString();
-//        }else{
-//            permutedMessage = binary.substring(0, 64);
-//        }
+        if (binary.length() < 64){
+            int padding = 63 - binary.length();
+            StringBuilder binMessage = new StringBuilder();
+            for (int i = 0; i < padding; i++) {
+                binMessage.append("0");
+            }
+            binMessage.append(binary);
+            permutedMessage = binMessage.toString();
+        }else{
+            permutedMessage = binary.substring(0, 64);
+        }
         StringBuilder initialMessage = new StringBuilder();
         for (int i = 0; i < ip.length; i++) {
-            initialMessage.append(binary.charAt(ip[i] - 1));
+            initialMessage.append(permutedMessage.charAt(ip[i] - 1));
         }
         return initialMessage.toString();
     }
@@ -245,8 +248,6 @@ public class DES {
             auxMessage[i][0] = auxMessage[i - 1][1];
             getRight(i);
         }
-        System.out.println("L: " + auxMessage[1][0].length());
-        System.out.println("R: " + auxMessage[1][1].length());
     }
 
     static String getEncodedMessage() {
@@ -255,28 +256,23 @@ public class DES {
         for (int j = 0; j < ip_inv.length; j++) {
             finalStr.append(RL.charAt(ip_inv[j] - 1));
         }
-        long dec_val = Long.parseLong(finalStr.toString(), 2);
-        String hex_val = Long.toHexString(dec_val);
-        return hex_val;
+        BigInteger val = new BigInteger(finalStr.toString(), 2);
+        return val.toString(16);
     }
 
     static void getRight(int index) {
         long Ln_1 = Long.parseLong(auxMessage[index - 1][0], 2);
         String function = func(index);
-        if(index == 1){
-            System.out.println(function.toString());
-        }
         long functionToBin = Long.parseLong(function, 2);
         long valueBin = Ln_1 ^ functionToBin;
         String valueStr = Long.toBinaryString(valueBin);
-        System.out.println(valueStr.length());
-        if (valueStr.length() < 48) {
-            int padding = 48 - valueStr.length();
+        if (valueStr.length() < 32) {
+            int padding = 32 - valueStr.length();
             for (int i = 0; i < padding; i++) {
                 valueStr = "0" + valueStr;
             }
-        } else if (valueStr.length() > 48) {
-            int excess = valueStr.length() - 48;
+        } else if (valueStr.length() > 32) {
+            int excess = valueStr.length() - 32;
             valueStr = valueStr.substring(excess, valueStr.length() - 1);
         }
         auxMessage[index][1] = valueStr;
@@ -291,7 +287,7 @@ public class DES {
             case 3:
                 return "0" + bin;
         }
-        return "0000";
+        return bin;
     }
 
     static String func(int index) {
@@ -388,7 +384,7 @@ public class DES {
 
 
     public static void main(String[] args) {
-        System.out.println(runDES("0123456789ABCDEF", "133457799BBCDFF1"));
+        System.out.println("The encoded message is: " + runDES("0123456789ABCDEF", "133457799BBCDFF1"));
     }
 
 }
