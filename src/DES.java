@@ -1,6 +1,7 @@
 import java.math.BigInteger;
 import java.sql.Array;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class DES {
     public static String runDES(String message, String key) {
@@ -384,7 +385,12 @@ public class DES {
 
 
     public static void main(String[] args) {
-        System.out.println("The encoded message is: " + runDES("0123456789ABCDEF", "133457799BBCDFF1"));
+        Scanner input = new Scanner(System.in);
+        System.out.println("Input 16 digit hex message");
+        String message = input.next();
+        System.out.println("Input 16 digit hex key");
+        String key = input.next();
+        System.out.println("The encoded message is: " + runDES(message, key));
     }
 
 }
